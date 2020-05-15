@@ -3,8 +3,22 @@
 #registerContainer {
   min-height: 100%;
 
+  @include desktop() {
+    min-height: unset;
+  }
+  @include tablet() {
+    min-height: unset;
+  }
+
   .register-content {
     min-height: 100%;
+
+    @include desktop() {
+      min-height: unset;
+    }
+    @include tablet() {
+      min-height: unset;
+    }
 
     .register-button {
       @include skewmorphic-shadow();

@@ -1,24 +1,31 @@
 <footer id="footerContainer">
   <div class="container py-2">
-    <li class="bold mb-1">Bemonad</li>
+    <li class="bold mb-1">NewsMachin</li>
     <div class="footer-content">
       <ul class="left-column">
-        <li *ngFor="let room of rooms">
-          <a [routerLink]="['/rooms']" [queryParams]="{ id: room._id }">{{room.name}}</a>
+        <li>
+          <a [routerLink]="['/register']">
+            Accueil
+          </a>
         </li>
       </ul>
       <ul class="right-column">
-        <li>
-          <a href="tel:+336 66 66 33 33">+336 66 66 33 33</a>
+        <li class="logout" *ngIf="currentUser" (click)="logout()">
+          Logout
         </li>
-        <li *ngIf="currentUser" class="bold mt-1">
-          <a [routerLink]="['/booking']" class="booking-link">
-            Réserver
+        <li *ngIf="!currentUser">
+          <a [routerLink]="['/login']">Se connecter</a>
+        </li>
+        <li>
+          <a [routerLink]="['/register']">
+            Register
             <i class="fas fa-chevron-right"></i>
           </a>
         </li>
       </ul>
     </div>
-    <div class="baseline mt-2 text-center">2020 - Bemonad | Vincent Schlosser - Félix Darraud</div>
+    <div class="baseline mt-2 text-center">
+      2020 - NewsMachin | Félix Darraud
+    </div>
   </div>
 </footer>

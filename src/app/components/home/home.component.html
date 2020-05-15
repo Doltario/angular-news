@@ -1,47 +1,66 @@
 <div id="homeContainer">
   <div class="container">
     <h1 class="page-title semi-bold">
-      Bemonad,<br />
-      <span class="subtitle">Réservez votre salle de coworking en un clic</span>
+      NewsMachin,<br />
+      <span class="subtitle" *ngIf="!currentUser">Votre site d'actualités</span>
+      <span class="subtitle" *ngIf="currentUser">Le site d'actualité de {{currentUser.firstname}} {{ currentUser.lastname }}</span>
     </h1>
   </div>
 
-  <div class="main-banner">
-      <!-- @TODO: Maybe implement a slider here -->
-    <img src="assets/images/lemonade.jpg" alt="" />
+  <div class="container" *ngIf="currentUser">
+    <div class="text-right">bookmarks ({{currentUser.bookmarks.length}})</div>
+    <span class="bookmark" *ngFor="let bookmark of currentUser.bookmarks" (click)="changeSelectedSource(bookmark.id)">{{bookmark.name}}</span>
+    
+  </div>
 
+  <div class="container mb-7">
+    <div class="input-container">
+      <label for="source">Source</label>
+      <select id="source" [ngModel]="selectedSource.id" (change)="changeSelectedSource($event.target.value)">
+        <option disabled>Choisir une Source</option>
+        <option *ngFor="let source of sources" [value]="source.id">{{ source.name }}</option>
+      </select>
+    </div>
+    <div class="input-container">
+      <label for="keyword">Mot-clé</label>
+      <input id="keyword" type="text" [(ngModel)]="keyword" />
+    </div>
 
-    <div class="container py-5">
-      <h2 class="banner-title semi-bold text-center">
-        Place des fêtes
-      </h2>
-      <p class="text-center mt-2">
-        Au coeur du 19ème arrondissment, Benomad vous propose 5 salles de coworking tout proche de la Place des Fêtes
-      </p>
+    <div class="text-center">
+      <button class="p-1 mr-1" (click)="search()">
+        <span *ngIf="!loading">Rechercher</span>
+        <span *ngIf="loading">Recherche…</span>
+      </button>
+      <button class="p-1 ml-1" (click)="addToBookmarks()" *ngIf="currentUser && isInBookmark() === false">
+        <span *ngIf="!adding">Ajouter aux bookmarks</span>
+        <span *ngIf="adding">Ajout…</span>
+      </button>
+      <button class="p-1 ml-1" (click)="removeFromBookmarks()" *ngIf="currentUser && isInBookmark() === true">
+        <span *ngIf="!removing">Supprimer le bookmark</span>
+        <span *ngIf="removing">Suppression…</span>
+      </button>
     </div>
   </div>
 
-  <div class="container pt-7 cards-container">
-    <div *ngFor="let room of rooms" class="card-item mb-7">
-      <img src="assets/images/lemonade.jpg" alt="Imade de la salle {{room.name}}" />
+  <div *ngIf="articles && articles.length === 0">Pas de résultat</div>
+
+  <div class="container cards-container" *ngIf="articles && articles.length > 0">
+    <div class="card-item mb-7" *ngFor="let article of articles">
+      <img [src]="article.urlToImage" />
       <div class="content p-2">
-        <h3 class="semi-bold mb-1">{{ room.name }}</h3>
-        <div class="mb-1">
-          <bemonad-capacities [stand]="room.capacity_stand" [sit]="room.capacity_sit"></bemonad-capacities>
-        </div>
-        <p class="card-description mb-1">{{ room.description }}</p>
+        <h3 class="semi-bold mb-1">{{article.title}}</h3>
+        <p class="card-description mb-2">{{article.description}}</p>
         <div class="card-bottom-container">
-          <a [routerLink]="['/rooms']" [queryParams]="{ id: room._id }">Voir la salle</a>
+          <p class="card-date">{{moment(article.publishedAt).format('D/MM/YYYY')}}</p>
           <div *ngIf="currentUser" class="bold">
-            <a [routerLink]="['/booking']" class="booking-link">
-              Réserver
+            <a [href]="article.url" class="booking-link">
+              Lire l'article
               <i class="fas fa-chevron-right"></i>
             </a>
           </div>
         </div>
       </div>
     </div>
+    <div class="spacer"></div>
   </div>
-
-  <bemonad-book-banner></bemonad-book-banner>
 </div>

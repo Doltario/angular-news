@@ -1,26 +1,95 @@
-import { Component, OnInit } from '@angular/core';
-import { RoomService } from '../../services/room.service';
-import { UserService } from '../../services/user.service';
+import { Component, OnInit } from "@angular/core";
+import { ArticleService } from "../../services/article.service";
+import { UserService } from "../../services/user.service";
+import * as moment from "moment";
+moment.locale("fr");
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  selector: "app-home",
+  templateUrl: "./home.component.html",
+  styleUrls: ["./home.component.scss"],
 })
 export class HomeComponent implements OnInit {
-  public rooms: any;
   public currentUser: any;
+  public articles: Object[] = null;
+  public sources: Object[] = [];
+  public selectedSource: Object = {};
+  public keyword: string = "";
+  public loading: Boolean = false;
+  public adding: Boolean = false;
+  public removing: Boolean = false;
+  public moment = moment;
 
-  constructor(private roomService: RoomService, private userService: UserService) { }
+  constructor(
+    private userService: UserService,
+    private articleService: ArticleService
+  ) {}
 
   ngOnInit(): void {
-    this.roomService.getAllRooms().subscribe(rooms => {
-      this.rooms = rooms;
+    this.articleService.getSources().subscribe((response) => {
+      this.sources = response.data.sources;
+
+      if (localStorage.getItem("previousSource")) {
+        this.changeSelectedSource(localStorage.getItem("previousSource"));
+      }
     });
 
-    this.userService.getCurrentUser().subscribe(currentUser => {      
+    this.userService.getCurrentUser().subscribe((currentUser) => {
       this.currentUser = currentUser;
+    });
+
+    if (localStorage.getItem("previousKeyword")) {
+      this.keyword = localStorage.getItem("previousKeyword");
+    }
+  }
+
+  changeSelectedSource(sourceId) {
+    this.selectedSource = this.sources.find((source) => source.id === sourceId);
+  }
+
+  addToBookmarks() {
+    this.adding = true
+    this.userService.addToBookmarks(this.selectedSource).subscribe(() => {
+      this.adding = false
+    }, () => {
+      this.adding = false
     });
   }
 
+  removeFromBookmarks() {
+    const bookmark = this.currentUser.bookmarks.find(bookmark => bookmark.id === this.selectedSource.id)
+    this.userService.removeFromBookmarks(bookmark).subscribe(() => {
+      this.removing = false
+    }, () => {
+      this.removing = false
+    });;
+  }
+
+  isInBookmark() {
+    return this.currentUser.bookmarks.find(bookmark => bookmark.id === this.selectedSource.id) ? true : false
+  }
+
+  search() {
+    if (this.selectedSource === null || this.loading === true) return;
+
+    this.loading = true;
+    if (!this.keyword || this.keyword.trim() === "") this.keyword = null;
+
+    this.articleService
+      .getArticles(this.selectedSource.id, this.keyword)
+      .subscribe(
+        (response) => {
+          localStorage.setItem("previousSource", this.selectedSource.id);
+          if (this.keyword) {
+            localStorage.setItem("previousKeyword", this.keyword);
+          }
+          this.articles = response.data.articles;
+          this.loading = false;
+        },
+        (error) => {
+          this.loading = false;
+          console.error("An error occured", error);
+        }
+      );
+  }
 }

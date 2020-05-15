@@ -1,15 +1,18 @@
 <div id="registerContainer">
-  <div class="container desktop-nav-avoider register-content" *ngIf="tokenExpired === true">
-    <div class="page-title text-center">Lien expiré, veuillez en demander un autre. <br /> Un lien de création de compte est valable 1 heure.</div>
-  </div>
-  <div class="container desktop-nav-avoider register-content" *ngIf="user">
-    <h1 class="page-title text-center">Bemonad</h1>
+  <div class="container desktop-nav-avoider register-content">
+    <h1 class="page-title text-center">NewsMachin</h1>
 
     <div class="input-container">
       <label for="email">Identifiant</label>
-      <input id="email" class="border-input" type="email" placeholder="Email" [ngModel]="user.email" disabled />
-      <div class="input-caption mt-1" (click)="toggleIdExplanation()">Pourquoi je ne peux pas changer mon identifiant ?</div>
-      <div class="input-caption mt-1" *ngIf="showIdExplanation">Le mail associé à votre compte est défini par un administrateur. Il s'agit de celui utilisé lors de votre demande d'accès.</div>
+      <input id="email" class="border-input" type="email" placeholder="Email" [(ngModel)]="user.email" />
+    </div>
+    <div class="input-container">
+      <label for="firstname">Prénom</label>
+      <input id="firstname" class="border-input" type="text" placeholder="Votre prénom" [(ngModel)]="user.firstName" />
+    </div>
+    <div class="input-container">
+      <label for="lastname">Prénom</label>
+      <input id="lastname" class="border-input" type="text" placeholder="Votre nom" [(ngModel)]="user.lastName" />
     </div>
     <div class="input-container">
       <label for="password">Mot de passe</label>

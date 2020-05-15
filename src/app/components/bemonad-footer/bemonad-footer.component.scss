@@ -10,6 +10,10 @@
     .left-column, .right-column {
       width: 50%;
     }
+
+    .logout {
+      @include link-style();
+    }
   }
   .baseline {
     @include font-size(11);

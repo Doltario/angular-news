@@ -6,12 +6,10 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 interface UserData {
-  _id: string;
   firstName: string;
   lastName: string;
   email: string;
-  role: string;
-  token: string;
+  bookmarks: Object[];
 }
 
 @Injectable({
@@ -34,8 +32,12 @@ export class UserService {
   }
 
   getUser(jwt) {
-    const observableUser = this.http.get<UserData>(`${this.apiUrl}/users/${jwt}`);
-    observableUser.subscribe( user => {
+    const body = { token: jwt } 
+    const observableUser = this.http.post<UserData>(`${this.apiUrl}/me`, body);
+    observableUser.subscribe( response => {
+      const { user, bookmark } = response.data
+
+      user.bookmarks = bookmark
       this.user = user;
       this.currentUser.next(user);
     });
@@ -43,20 +45,55 @@ export class UserService {
   }
 
   register(user, password) {
-    const body = {firstName: user.firstName, lastName: user.lastName, password, token: user.token};
+    const body = {firstname: user.firstName, lastname: user.lastName, password, email: user.email};
 
-    return this.http.put<UserData>(`${this.apiUrl}/users`, body, this.httpOptionsJson);
+    return this.http.post<UserData>(`${this.apiUrl}/register`, body, this.httpOptionsJson);
   }
 
   checkCredentials(loginData) {
-    return this.http.post(`${this.apiUrl}/users/login`, loginData, this.httpOptionsJson );
+    const { email, password } = loginData;
+    return this.http.post(`${this.apiUrl}/login`, {email, password}, this.httpOptionsJson );
   }
 
-  finalCheckIn(user) {
-    this.user = user;
-    this.currentUser.next(user);
-    localStorage.setItem('access_token', this.user.token);
-    this.router.navigate(['/']);
+  addToBookmarks(source) {
+    const response = this.http.post(`${this.apiUrl}/bookmark`, {...source, token: localStorage.getItem('access_token')}, this.httpOptionsJson );
+    response.subscribe((res) => {
+      const user = this.currentUser.getValue()
+      user.bookmarks = [...user.bookmarks, res.data.data]
+      this.currentUser.next(user)
+    })
+    return response
+  }
+  removeFromBookmarks(bookmark) {
+    const response = this.http.delete(`${this.apiUrl}/bookmark/${bookmark._id}`, {body: { token: localStorage.getItem('access_token') }});
+    response.subscribe((res) => {
+      const user = this.currentUser.getValue()
+      user.bookmarks = user.bookmarks.filter(bookmarkItem => bookmarkItem._id !== bookmark._id)
+      this.currentUser.next(user)
+    })
+    return response
+  }
+
+  finalCheckIn(user, token) {
+    this.getUser(token).subscribe((response) => {
+      localStorage.setItem('access_token', token);
+      const { user, bookmark } = response.data
+      user.bookmarks = bookmark
+      this.user = user;
+      this.currentUser.next(user);
+      this.router.navigate(['/']);
+
+    })
+    // this.user = user;
+  }
+
+  logout() {
+    const response = this.http.get(`${this.apiUrl}/logout`)
+    response.subscribe(() => {
+      localStorage.removeItem('access_token');
+      this.currentUser.next(null);
+    })
+    return response
   }
 
   isAuthenticated() {

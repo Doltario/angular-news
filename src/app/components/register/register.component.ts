@@ -11,19 +11,24 @@ const hasLowerCaseRegex = /\S*[a-z]+\S*/g;
   styleUrls: ["./register.component.scss"],
 })
 export class RegisterComponent implements OnInit {
-  id: string;
   user: {
     firstName: string;
     lastName: string;
     email: string;
-    _id: string;
+  } = {
+    firstName: "",
+    lastName: "",
+    email: "",
   };
   password: {
     reference: string;
     confirmation: string;
-  };
+  } = {
+    reference: null,
+    confirmation: null,
+  }
 
-  loading: Boolean;
+  loading: Boolean = false;
 
   errors: {
     password: {
@@ -31,11 +36,13 @@ export class RegisterComponent implements OnInit {
       confirmation: Boolean;
     };
     other: Boolean;
+  } = {
+    password: {
+      reference: false,
+      confirmation: false,
+    },
+    other: false,
   };
-
-  showIdExplanation: Boolean;
-
-  tokenExpired: Boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -43,24 +50,7 @@ export class RegisterComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit() {
-    this.password = {
-      reference: "",
-      confirmation: "",
-    };
-    this.resetErrors();
-    this.showIdExplanation = false;
-    this.tokenExpired = false;
-
-    this.id = this.route.snapshot.params.id;
-    this.userService.getUser(this.id).subscribe((data) => {
-      this.user = data;
-    }, (error) => {
-      if (error.status === 401) {
-        this.tokenExpired = true
-      }
-    });
-  }
+  ngOnInit() {}
 
   resetErrors() {
     this.errors = {
@@ -103,17 +93,14 @@ export class RegisterComponent implements OnInit {
     if (!this.checkPassword()) return;
 
     this.loading = true;
-    this.userService
-    .register(this.user, this.password.reference)
-    .subscribe(() => {
+    this.userService.register(this.user, this.password.reference).subscribe(
+      () => {
         this.loading = false;
         this.router.navigate(["/login"]);
-      }, (error) => {
-        console.error(error)
-      });
-  }
-
-  toggleIdExplanation() {
-    this.showIdExplanation = !this.showIdExplanation;
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
   }
 }

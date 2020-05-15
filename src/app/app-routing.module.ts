@@ -10,7 +10,7 @@ import { AuthGardService} from './services/auth-gard.service';
 
 const routes: Routes = [
   {
-    path: 'register/:id',
+    path: 'register',
     component: RegisterComponent,
   },
   {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RoomService } from '../../services/room.service';
+import { Router } from "@angular/router";
 import { UserService } from '../../services/user.service';
 
 @Component({
@@ -8,18 +8,17 @@ import { UserService } from '../../services/user.service';
   styleUrls: ['./bemonad-footer.component.scss']
 })
 export class BemonadFooterComponent implements OnInit {
-  public rooms: any;
   public currentUser: any;
 
-  constructor(private roomService: RoomService, private userService: UserService) { }
+  constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
-    this.roomService.getAllRooms().subscribe(rooms => {
-      this.rooms = rooms;
-    });
-
     this.userService.getCurrentUser().subscribe(currentUser => {      
       this.currentUser = currentUser;
     });
+  }
+
+  logout() {
+    this.userService.logout();
   }
 }

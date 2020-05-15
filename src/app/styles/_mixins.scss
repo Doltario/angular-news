@@ -38,7 +38,7 @@
   }
 }
 
-@mixin link-style($color) {
+@mixin link-style($color: $bemonad-blue) {
   &,
   &:visited,
   &:focus,

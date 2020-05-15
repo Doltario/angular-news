@@ -16,9 +16,6 @@ import { RoomComponent } from './components/room/room.component';
 import { BookingComponent } from './components/booking/booking.component';
 import { MyBookingsComponent } from './components/my-bookings/my-bookings.component';
 import { BemonadFooterComponent } from './components/bemonad-footer/bemonad-footer.component';
-import { BemonadCapacitiesComponent } from './components/bemonad-capacities/bemonad-capacities.component';
-import { BemonadCitationComponent } from './components/bemonad-citation/bemonad-citation.component';
-import { BemonadBookBannerComponent } from './components/bemonad-book-banner/bemonad-book-banner.component';
 import { NavComponent } from './components/nav/nav.component';
 
 import { UserService } from './services/user.service';
@@ -38,9 +35,6 @@ export function tokenGetter() {
     BookingComponent,
     MyBookingsComponent,
     BemonadFooterComponent,
-    BemonadCapacitiesComponent,
-    BemonadCitationComponent,
-    BemonadBookBannerComponent,
     NavComponent
   ],
   imports: [
