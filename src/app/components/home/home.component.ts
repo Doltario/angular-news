@@ -13,7 +13,7 @@ export class HomeComponent implements OnInit {
   public currentUser: any;
   public articles: Object[] = null;
   public sources: Object[] = [];
-  public selectedSource: Object = {};
+  public selectedSource: any = {};
   public keyword: string = "";
   public loading: Boolean = false;
   public adding: Boolean = false;
@@ -26,7 +26,7 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.articleService.getSources().subscribe((response) => {
+    this.articleService.getSources().subscribe((response:any) => {
       this.sources = response.data.sources;
 
       if (localStorage.getItem("previousSource")) {
@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit {
   }
 
   changeSelectedSource(sourceId) {
-    this.selectedSource = this.sources.find((source) => source.id === sourceId);
+    this.selectedSource = this.sources.find((source:any) => source.id === sourceId);
   }
 
   addToBookmarks() {
@@ -78,7 +78,7 @@ export class HomeComponent implements OnInit {
     this.articleService
       .getArticles(this.selectedSource.id, this.keyword)
       .subscribe(
-        (response) => {
+        (response:any) => {
           localStorage.setItem("previousSource", this.selectedSource.id);
           if (this.keyword) {
             localStorage.setItem("previousKeyword", this.keyword);

@@ -12,9 +12,6 @@ import { AppComponent } from './app.component';
 import { RegisterComponent } from './components/register/register.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
-import { RoomComponent } from './components/room/room.component';
-import { BookingComponent } from './components/booking/booking.component';
-import { MyBookingsComponent } from './components/my-bookings/my-bookings.component';
 import { BemonadFooterComponent } from './components/bemonad-footer/bemonad-footer.component';
 import { NavComponent } from './components/nav/nav.component';
 
@@ -31,9 +28,6 @@ export function tokenGetter() {
     RegisterComponent,
     HomeComponent,
     LoginComponent,
-    RoomComponent,
-    BookingComponent,
-    MyBookingsComponent,
     BemonadFooterComponent,
     NavComponent
   ],

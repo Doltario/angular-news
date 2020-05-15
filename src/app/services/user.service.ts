@@ -5,18 +5,18 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-interface UserData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  bookmarks: Object[];
-}
+// interface UserData {
+//   firstName: string;
+//   lastName: string;
+//   email: string;
+//   bookmarks: Object[];
+// }
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private user: UserData;
+  // private user: UserData;
   apiUrl: string;
   httpOptionsJson: Object;
   currentUser: BehaviorSubject<any>;
@@ -33,12 +33,11 @@ export class UserService {
 
   getUser(jwt) {
     const body = { token: jwt } 
-    const observableUser = this.http.post<UserData>(`${this.apiUrl}/me`, body);
-    observableUser.subscribe( response => {
+    const observableUser = this.http.post(`${this.apiUrl}/me`, body);
+    observableUser.subscribe( (response: any) => {
       const { user, bookmark } = response.data
 
       user.bookmarks = bookmark
-      this.user = user;
       this.currentUser.next(user);
     });
     return observableUser;
@@ -47,7 +46,7 @@ export class UserService {
   register(user, password) {
     const body = {firstname: user.firstName, lastname: user.lastName, password, email: user.email};
 
-    return this.http.post<UserData>(`${this.apiUrl}/register`, body, this.httpOptionsJson);
+    return this.http.post(`${this.apiUrl}/register`, body, this.httpOptionsJson);
   }
 
   checkCredentials(loginData) {
@@ -57,7 +56,7 @@ export class UserService {
 
   addToBookmarks(source) {
     const response = this.http.post(`${this.apiUrl}/bookmark`, {...source, token: localStorage.getItem('access_token')}, this.httpOptionsJson );
-    response.subscribe((res) => {
+    response.subscribe((res:any) => {
       const user = this.currentUser.getValue()
       user.bookmarks = [...user.bookmarks, res.data.data]
       this.currentUser.next(user)
@@ -65,7 +64,15 @@ export class UserService {
     return response
   }
   removeFromBookmarks(bookmark) {
-    const response = this.http.delete(`${this.apiUrl}/bookmark/${bookmark._id}`, {body: { token: localStorage.getItem('access_token') }});
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+      body: {
+        token: localStorage.getItem('token'),
+      },
+    };
+    const response = this.http.delete(`${this.apiUrl}/bookmark/${bookmark._id}`, options);
     response.subscribe((res) => {
       const user = this.currentUser.getValue()
       user.bookmarks = user.bookmarks.filter(bookmarkItem => bookmarkItem._id !== bookmark._id)
@@ -75,16 +82,13 @@ export class UserService {
   }
 
   finalCheckIn(user, token) {
-    this.getUser(token).subscribe((response) => {
+    this.getUser(token).subscribe((response:any) => {
       localStorage.setItem('access_token', token);
       const { user, bookmark } = response.data
       user.bookmarks = bookmark
-      this.user = user;
       this.currentUser.next(user);
       this.router.navigate(['/']);
-
     })
-    // this.user = user;
   }
 
   logout() {

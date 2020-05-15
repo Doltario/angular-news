@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
     }
 
     this.loading = true;
-    this.userService.checkCredentials(this.login).subscribe((response) => {
+    this.userService.checkCredentials(this.login).subscribe((response:any) => {
       const {user, token} = response.data
       this.loading = false;
       this.userService.finalCheckIn(user, token);
