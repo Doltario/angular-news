@@ -1,0 +1,42 @@
+@import "~bootstrap/scss/_functions";
+@import "~bootstrap/scss/_variables";
+@import "~bootstrap/scss/_mixins";
+@import "~bootstrap/scss/_dropdown";
+
+// Above are imports for dropdowns
+
+@import "vars";
+@import "mixins";
+
+#myBookingsContainer {
+  .my-bookings-content {
+    .filters-container {
+      .filters-trigger {
+        @include skewmorphic-shadow();
+        @include default-button();
+      }
+
+      .filters-dropdown {
+        .dot {
+          display: inline-block;
+          height: 10px;
+          width: 10px;
+          border-radius: 5px;
+        }
+      }
+    }
+  }
+
+  .bg-all {
+    background-color: transparent;
+  }
+  .bg-passed {
+    background-color: $grey;
+  }
+  .bg-to-come {
+    background-color: $bemonad-green;
+  }
+  .bg-canceled {
+    background-color: $bemonad-red;
+  }
+}

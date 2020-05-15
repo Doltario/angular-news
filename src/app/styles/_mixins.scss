@@ -1,0 +1,155 @@
+@import "vars";
+
+/* smartphone tablet and desktop mixins help to write media queries */
+@mixin smartphone {
+  @media (max-width: #{$smarphone-width}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: #{$tablet-width}) and (max-width: #{$desktop-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: #{$desktop-width}) {
+    @content;
+  }
+}
+
+/* Generate a skewmorphic shadow. Both params are optionnal.  */
+@mixin skewmorphic-shadow($left-color: $near-white, $right-color: $grey) {
+  box-shadow: -9px -9px 16px $left-color, 9px 9px 16px $right-color;
+}
+
+@mixin default-button {
+  & {
+    appearance: none;
+    background: $near-white;
+    border: none;
+    @include font-size(11);
+    display: inline-block;
+    outline: none;
+    border-radius: $default-border-radius * 2;
+    padding: $spacing-basis * 2 $spacing-basis * 4;
+    margin-bottom: $spacing-basis; // NOTE: To let a bit space for the shadow
+  }
+}
+
+@mixin link-style($color) {
+  &,
+  &:visited,
+  &:focus,
+  &:active {
+    transition: color 0.3s;
+    color: $color !important;
+    text-decoration: none;
+  }
+
+  &:hover {
+    color: darken($color, 10%);
+    text-decoration: underline;
+  }
+}
+
+@mixin no-link-style() {
+  &,
+  &:visited,
+  &:focus,
+  &:active {
+    transition: unset;
+    color: inherit !important;
+    text-decoration: none;
+  }
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+/* It will adapt font size according to the screen type dynamically. It can also be set manually.  */
+/* usage: @include font-size(mobilePx, tabletPx?, desktopPx?)  */
+@mixin font-size(
+  $pxValueXs,
+  $pxValueMd: $pxValueXs * 1.1,
+  $pxValueLg: $pxValueXs * 1.2
+) {
+  @if ($pxValueXs < $minimumFontSize) {
+    $pxValueXs: $pxValueLg;
+  }
+  $remValueXs: $pxValueXs / 10;
+  font-size: #{$remValueXs}rem;
+
+  @include tablet() {
+    @if ($pxValueMd < $minimumFontSize) {
+      $pxValueMd: $pxValueLg;
+    }
+
+    $remValueMd: $pxValueMd / 10;
+    font-size: #{$remValueMd}rem;
+  }
+
+  @include desktop() {
+    $remValueLg: $pxValueLg / 10;
+    font-size: #{$remValueLg}rem;
+  }
+}
+
+/* Generate spacing classes */
+@mixin spacing {
+  @for $i from 1 through 20 {
+    // Margins
+    .m-#{$i} {
+      margin: ($spacing-basis * $i) !important;
+    }
+    .mx-#{$i} {
+      margin-left: ($spacing-basis * $i) !important;
+      margin-right: ($spacing-basis * $i) !important;
+    }
+    .my-#{$i} {
+      margin-top: ($spacing-basis * $i) !important;
+      margin-bottom: ($spacing-basis * $i) !important;
+    }
+    .mt-#{$i} {
+      margin-top: ($spacing-basis * $i) !important;
+    }
+    .mr-#{$i} {
+      margin-right: ($spacing-basis * $i) !important;
+    }
+    .mb-#{$i} {
+      margin-bottom: ($spacing-basis * $i) !important;
+    }
+    .ml-#{$i} {
+      margin-left: ($spacing-basis * $i) !important;
+    }
+
+    // Paddings
+    .p-#{$i} {
+      padding: ($spacing-basis * $i) !important;
+    }
+    .px-#{$i} {
+      padding-left: ($spacing-basis * $i) !important;
+      padding-right: ($spacing-basis * $i) !important;
+    }
+    .py-#{$i} {
+      padding-top: ($spacing-basis * $i) !important;
+      padding-bottom: ($spacing-basis * $i) !important;
+    }
+    .pt-#{$i} {
+      padding-top: ($spacing-basis * $i) !important;
+    }
+    .pr-#{$i} {
+      padding-right: ($spacing-basis * $i) !important;
+    }
+    .pb-#{$i} {
+      padding-bottom: ($spacing-basis * $i) !important;
+    }
+    .pl-#{$i} {
+      padding-left: ($spacing-basis * $i) !important;
+    }
+  }
+}
+
+@include spacing;

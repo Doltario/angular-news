@@ -1,0 +1,31 @@
+<div id="myBookingsContainer">
+  <div class="container desktop-nav-avoider my-bookings-content">
+    <h1 class="page-title text-center">Mes réservations</h1>
+
+    <div class="filters-container text-right">
+      <div class="filters-dropdown" ngbDropdown>
+        <button class="filters-trigger" ngbDropdownToggle>
+          <span class="dot" [ngClass]="selectedFilter.class"></span>
+          {{ selectedFilter.label }}
+        </button>
+        <div class="pt-1" ngbDropdownMenu>
+          <button class="pb-1" *ngFor="let filterKey of objectKeys(filtersMap)" (click)="changeFilter(filtersMap[filterKey])" ngbDropdownItem>
+            <span class="dot" [ngClass]="'bg-' + filtersMap[filterKey].class"></span>
+            {{ filtersMap[filterKey].label }}
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="my-bookings-list">
+      <div class="booking-item" *ngFor="let booking of bookings">
+        <div class="date-container">
+          <span class="day">{{moment(booking.start).format('D')}}</span>
+          <span class="month">{{moment(booking.start).format('MMM')}}</span>
+        </div>
+        <div class="content">
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

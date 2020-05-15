@@ -1,0 +1,188 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap");
+// NOTE: 400 regular, italic, 600 semi-bold, 700 bold. use .regular .italic, semi-bold and .bold classes instead of font-weight of font-style
+
+// NOTE: font-size = (font-size on figma) + 4
+
+/* NOTE: Every files in src/styles can be import with just its name. For example _vars.scss can be imported with @import "vars"  */
+@import "vars";
+@import "mixins";
+
+// Reset
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: "Open Sans", sans-serif;
+  color: $default-text-color;
+}
+
+html {
+  background-color: $lightest-grey;
+  font-size: 62.5%;
+  overflow-x: hidden;
+}
+
+body {
+  max-width: $site-container-width;
+  margin: 0 auto;
+  @include font-size(16, 16, 14);
+  @media (min-width: #{$site-container-width}) {
+    border-left: 1px solid $light-grey;
+    border-right: 1px solid $light-grey;
+  }
+}
+
+h1 {
+  @include font-size(28);
+  font-weight: $semi-bold-font-weight;
+}
+
+h2 {
+  @include font-size(22);
+}
+
+h3 {
+  @include font-size(18);
+}
+
+img {
+  display: block; // removes white space
+  object-fit: cover;
+  width: 100%;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  @include link-style($bemonad-blue);
+}
+
+// Display
+.hide-xs {
+  @include smartphone {
+    display: none !important;
+  }
+}
+
+.hide-md {
+  @include tablet {
+    display: none !important;
+  }
+}
+
+.hide-lg {
+  @include desktop {
+    display: none !important;
+  }
+}
+
+// Fonts
+.regular {
+  font-weight: 400;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.semi-bold {
+  font-weight: 600;
+}
+
+.bold {
+  font-weight: $bold-font-weight;
+}
+
+// Structure
+.container {
+  width: 100%;
+  padding: 0 $spacing-basis * 3;
+}
+
+.desktop-nav-avoider {
+  @include desktop() {
+    padding-top: $desktop-nav-height;
+  }
+
+  @include tablet() {
+    padding-top: $desktop-nav-height;
+  }
+}
+
+// style
+.page-title {
+  padding: ($spacing-basis * 10) 0 ($spacing-basis * 5);
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: $spacing-basis * 2;
+
+  label {
+    margin-bottom: $spacing-basis;
+  }
+
+  .input-caption,
+  .input-error {
+    font-style: italic;
+    @include font-size(10);
+  }
+
+  .input-caption {
+    color: $dark-grey;
+  }
+
+  .input-error {
+    color: $bemonad-red;
+  }
+}
+
+.border-input[type="email"],
+.border-input[type="password"] {
+  appearance: none;
+  background: none;
+  border: none;
+  border-bottom: 3px solid $bemonad-green;
+  padding: $spacing-basis;
+
+  &::placeholder {
+    font-style: italic;
+    @include font-size(13);
+    color: $dark-grey;
+  }
+
+  &:disabled {
+    border-color: $grey;
+    color: $dark-grey;
+  }
+
+  &.red-border {
+    border-color: $bemonad-red;
+  }
+}
+
+/* Importing Bootstrap SCSS file. */
+// @import '~bootstrap/scss/bootstrap'; // NOTE: Reminder => Boostrap style is NOT imported intentionally, do not uncomment this line (neither delete it)
